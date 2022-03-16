@@ -13,11 +13,15 @@ library NFTSVG {
   }
 
   function generateSVG(SVGParams memory params) internal view returns (string memory svg) {
+    ( , string memory base ) = idToColor(params.tokenId + 1, params.tokenId, params.owner);
+
     return
       string(
         abi.encodePacked(
           '<svg version="1.1" width="580" height="580" viewBox="0 0 580 580" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">',
-          '<rect width="580" height="580" x="0" y="0" fill="white" />',
+          '<rect width="580" height="580" x="0" y="0" fill="',
+          base,
+          '" />',
           _generateSVGPaths(params),
           '</svg>'
         )
@@ -38,7 +42,7 @@ library NFTSVG {
       for(uint256 c = 0; c < 10; ++c){
         ( uint256 duration, string memory rgb ) = idToColor(params.tokenId, r*c+pos_x*pos_y*pos_y+pos_x+r, params.owner);
         //( uint256 duration2, string memory rgb2 ) = idToColor(params.tokenId, r*c+duration, params.owner);
-        string memory pattern = string(abi.encodePacked(rgb, base, rgb));
+        string memory pattern = string(abi.encodePacked(rgb, ';', base, ';', rgb));
         svgPaths = string(abi.encodePacked(
           svgPaths,
           '<rect width="',
@@ -84,12 +88,12 @@ library NFTSVG {
       secondChunk.toString(),
       ', ',
       thirdChunk.toString(),
-      ');'
+      ')'
     ));
 
     if(thirdChunk > secondChunk){
       if(thirdChunk - secondChunk < 10){
-        rgbString = string(abi.encodePacked('rgb(0,0,255);'));
+        rgbString = string(abi.encodePacked('rgb(0,0,255)'));
       }
     }
 
