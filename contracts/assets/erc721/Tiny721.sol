@@ -65,13 +65,6 @@ contract Tiny721 is
   /// The symbol associated with this ERC-721 contract.
   string public symbol;
 
-  /**
-    The metadata URI to which token IDs are appended for generating `tokenUri`
-    results. The URI will always naively slap a decimal token ID to the end of
-    this provided URI.
-  */
-  string public metadataUri;
-
   /// The maximum number of this NFT that may be minted.
   uint256 public immutable cap;
 
@@ -127,19 +120,15 @@ contract Tiny721 is
 
     @param _name The name to assign to this item collection contract.
     @param _symbol The ticker symbol of this item collection.
-    @param _metadataURI The metadata URI to perform later token ID substitution
-      with.
     @param _cap The maximum number of tokens that may be minted.
   */
   constructor (
     string memory _name,
     string memory _symbol,
-    string memory _metadataURI,
     uint256 _cap
   ) {
     name = _name;
     symbol = _symbol;
-    metadataUri = _metadataURI;
     cap = _cap;
   }
 
@@ -270,8 +259,7 @@ contract Tiny721 is
   }
 
   /**
-    Return the token URI of the token with the specified `_id`. The token URI is
-    dynamically constructed from this contract's `metadataUri`.
+    Return the token URI of the token with the specified `_id`.
 
     @param _id The ID of the token to retrive a metadata URI for.
 
@@ -281,9 +269,7 @@ contract Tiny721 is
     uint256 _id
   ) external view virtual override returns (string memory) {
     if (!_exists(_id)) { revert URIQueryForNonexistentToken(); }
-    // return bytes(metadataUri).length != 0
-    //   ? string(abi.encodePacked(metadataUri, _id.toString()))
-    //   : '';
+
     address owner = _ownershipOf(_id);
     return _buildMeta(_id, owner);
   }
@@ -545,18 +531,6 @@ contract Tiny721 is
     bool _isAdmin
   ) external onlyOwner {
     administrators[_newAdmin] = _isAdmin;
-  }
-
-  /**
-    Allow the item collection owner to update the metadata URI of this
-    collection.
-
-    @param _uri The new URI to update to.
-  */
-  function setURI (
-    string calldata _uri
-  ) external virtual onlyOwner {
-    metadataUri = _uri;
   }
 
   /**

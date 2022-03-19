@@ -27,7 +27,7 @@ describe('Tiny721', function() {
   // Deploy a fresh set of smart contracts, using these constants, for testing.
   const NAME = 'Test';
   const SYMBOL = 'TEST';
-  const METADATA_URI = '';
+
   const CAP = 10420;
   let tiny721, goodReceiver, badReceiver;
   beforeEach(async () => {
@@ -36,7 +36,6 @@ describe('Tiny721', function() {
     tiny721 = await Tiny721.connect(alice.signer).deploy(
       NAME,
       SYMBOL,
-      METADATA_URI,
       CAP
     );
     await tiny721.deployed();
@@ -366,19 +365,19 @@ describe('Tiny721', function() {
       let newOwner = await tiny721.ownerOf(1);
       newOwner.should.be.equal(alice.address);
 
-
-      let metadata = await tiny721.tokenURI(1);
-      let data = metadata.substring(29);
-      let buff = new Buffer.from(data, 'base64');
-
-      console.log("metadata", buff.toString('ascii'));
-
-      let meta = JSON.parse(buff.toString('ascii'));
-      let imagedata = meta.image.substring(26);
-
-      console.log("imagedata", imagedata.toString('ascii'));
-      let imgbuffer = new Buffer.from(imagedata, 'base64');
-      fs.writeFileSync('art/token_gen.svg', imgbuffer);
+      // 
+      // let metadata = await tiny721.tokenURI(1);
+      // let data = metadata.substring(29);
+      // let buff = new Buffer.from(data, 'base64');
+      //
+      // console.log("metadata", buff.toString('ascii'));
+      //
+      // let meta = JSON.parse(buff.toString('ascii'));
+      // let imagedata = meta.image.substring(26);
+      //
+      // console.log("imagedata", imagedata.toString('ascii'));
+      // let imgbuffer = new Buffer.from(imagedata, 'base64');
+      // fs.writeFileSync('art/token_gen.svg', imgbuffer);
 
 
 

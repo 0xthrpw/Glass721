@@ -24,7 +24,7 @@ require('@nomiclabs/hardhat-etherscan');
 // Retrieve sensitive node and private key details from environment variables.
 const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID;
 const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY;
-
+const MAIN_DEPLOYER_PRIVATE_KEY = process.env.MAIN_DEPLOYER_PRIVATE_KEY;
 
 // Export a configuration for Hardhat to use when working with our contracts.
 module.exports = {
@@ -43,7 +43,7 @@ module.exports = {
   networks: {
     mainnet: {
       url: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
-      accounts: [`0x${DEPLOYER_PRIVATE_KEY}`]
+      accounts: [`0x${MAIN_DEPLOYER_PRIVATE_KEY}`]
     },
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/${INFURA_PROJECT_ID}`,
