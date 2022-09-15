@@ -11,7 +11,7 @@ contract OnChainMeta {
     /// @dev A mask for isolating an item's group ID.
     uint256 private constant GROUP_MASK = uint256(type(uint128).max) << 128;
 
-    string public metaDescription = 'You have to be a sea in order to absorb a dirty stream without getting dirty.';
+    string public metaDescription = 'Congratulations';
 
     function _buildMeta(uint256 _tokenId, address _owner) internal view returns (string memory) {
 
@@ -42,7 +42,7 @@ contract OnChainMeta {
     function _buildName(uint256 _tokenId) internal view returns (string memory) {
       uint256 groupId = (_tokenId & GROUP_MASK) >> 128;
       uint256 id = _tokenId << 128 >> 128;
-      return string(abi.encodePacked("SEAGLASS #", id.toString()));
+      return string(abi.encodePacked("MERGEGLASS #", id.toString()));
     }
 
     function _getMetadata(uint256 _tokenId) internal view returns (string memory) {

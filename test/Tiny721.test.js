@@ -60,9 +60,9 @@ describe('Tiny721', function() {
   // Perform those tests utilizing minted tokens.
   context('with minted tokens', async function() {
     beforeEach(async function() {
-      await tiny721.connect(alice.signer).mint_Qgo(alice.address, 1);
-      await tiny721.connect(alice.signer).mint_Qgo(bob.address, 2);
-      await tiny721.connect(alice.signer).mint_Qgo(carol.address, 3);
+      await tiny721.connect(alice.signer).mint(alice.address, 1);
+      await tiny721.connect(alice.signer).mint(bob.address, 2);
+      await tiny721.connect(alice.signer).mint(carol.address, 3);
     });
 
     // Confirm that we can retrieve balance of holder tokens.
@@ -312,7 +312,7 @@ describe('Tiny721', function() {
   // Test minting tokens.
   context('mint', async function() {
     it('successfully mints a single token', async function() {
-      const mint = await tiny721.mint_Qgo(alice.address, 1);
+      const mint = await tiny721.mint(alice.address, 1);
       await expect(mint).to
         .emit(tiny721, 'Transfer')
         .withArgs(ethers.constants.AddressZero, alice.address, 1);
@@ -323,7 +323,7 @@ describe('Tiny721', function() {
     });
 
     it('successfully mints multiple tokens', async function() {
-      const mint = await tiny721.mint_Qgo(alice.address, 5);
+      const mint = await tiny721.mint(alice.address, 5);
       for (let tokenId = 0; tokenId < 5; tokenId++) {
         await expect(mint).to
           .emit(tiny721, 'Transfer')
@@ -336,27 +336,27 @@ describe('Tiny721', function() {
     });
 
     it('does not revert for non-receivers', async function() {
-      await tiny721.mint_Qgo(tiny721.address, 1);
+      await tiny721.mint(tiny721.address, 1);
       let ownerOne = await tiny721.ownerOf(1);
       ownerOne.should.be.equal(tiny721.address);
     });
 
     it('rejects mints to the zero address', async function() {
       await expect(
-        tiny721.connect(alice.signer).mint_Qgo(ethers.constants.AddressZero, 1)
+        tiny721.connect(alice.signer).mint(ethers.constants.AddressZero, 1)
       ).to.be.revertedWith('MintToZeroAddress');
     });
 
     it('requires quantity to be greater than 0', async function() {
       await expect(
-        tiny721.connect(alice.signer).mint_Qgo(alice.address, 0)
+        tiny721.connect(alice.signer).mint(alice.address, 0)
       ).to.be.revertedWith('MintZeroQuantity');
     });
   });
 
   context('make a file', async function() {
     it('successfully mints a single token', async function() {
-      const mint = await tiny721.mint_Qgo(alice.address, 1);
+      const mint = await tiny721.mint(alice.address, 1);
       await expect(mint).to
         .emit(tiny721, 'Transfer')
         .withArgs(ethers.constants.AddressZero, alice.address, 1);
@@ -365,19 +365,19 @@ describe('Tiny721', function() {
       let newOwner = await tiny721.ownerOf(1);
       newOwner.should.be.equal(alice.address);
 
-      // 
-      // let metadata = await tiny721.tokenURI(1);
-      // let data = metadata.substring(29);
-      // let buff = new Buffer.from(data, 'base64');
-      //
-      // console.log("metadata", buff.toString('ascii'));
-      //
-      // let meta = JSON.parse(buff.toString('ascii'));
-      // let imagedata = meta.image.substring(26);
-      //
-      // console.log("imagedata", imagedata.toString('ascii'));
-      // let imgbuffer = new Buffer.from(imagedata, 'base64');
-      // fs.writeFileSync('art/token_gen.svg', imgbuffer);
+
+      let metadata = await tiny721.tokenURI(1);
+      let data = metadata.substring(29);
+      let buff = new Buffer.from(data, 'base64');
+
+      console.log("metadata", buff.toString('ascii'));
+
+      let meta = JSON.parse(buff.toString('ascii'));
+      let imagedata = meta.image.substring(26);
+
+      console.log("imagedata", imagedata.toString('ascii'));
+      let imgbuffer = new Buffer.from(imagedata, 'base64');
+      fs.writeFileSync('art/token_gen.svg', imgbuffer);
 
 
 

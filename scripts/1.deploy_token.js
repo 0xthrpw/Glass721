@@ -3,9 +3,9 @@ const ethers = hre.ethers;
 
 async function main() {
   const currentDate = new Date().getTime()
-  const COLLECTION_NAME = `5ea91a55 Token`;
+  const COLLECTION_NAME = `MergeGlass`;
   // const CONTRACT_META = 'https://ipfs.io/ipfs/QmVs58TkJbPAj8GvyeCfzLE1w8nvepj5a3U2oftE581cxD/contractMeta.json';
-  const SYMBOL = 'SEAGLASS'; //5ea91a55
+  const SYMBOL = 'GLASS'; //5ea91a55
   const CAP = '1000';
   //let proxyRegistryAddress = '0xa5409ec958c83c3f309868babaca7c86dcb077c1';
   // proxyRegistryAddress = '0xf57b2c51ded3a29e6891aba85459d600256cf317';
