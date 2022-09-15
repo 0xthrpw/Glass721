@@ -28,48 +28,91 @@ library NFTSVG {
       );
   }
 
+  function _genPath(uint256 _startX, uint256 _startY, uint256 _endX, uint256 _endY, uint256 _id, address _owner ) private view returns (string memory) {
+    ( , string memory base ) = idToColor(_id, _id + 1, _owner);
+    ( uint256 duration, string memory rgb ) = idToColor(_id+10, _id + 2, _owner);
+
+    string memory pattern = string(abi.encodePacked(rgb, ';', base, ';', rgb));
+
+
+    string memory fillAnimation = string(abi.encodePacked(
+      '<animate attributeName="fill" values="',
+      pattern,
+      '" dur="',
+      (3+(duration/(2))).toString(),
+      's" repeatCount="indefinite" />'
+    ));
+
+    string memory svgPath;
+      svgPath = string(abi.encodePacked(
+        '<path d="M',
+        _startX.toString(),
+        ' ',
+        _startY.toString(),
+        ' L',
+        _endX.toString(),
+        ' ',
+        _endY.toString(),
+        '"/>',
+        fillAnimation
+      ));
+
+    return svgPath;
+  }
+
   function _generateSVGPaths(SVGParams memory params) private view returns (string memory svgPaths) {
     string memory svgPaths;
 
-    uint256 pos_x = 40;
-    uint256 pos_y = 40;
-    uint256 w = 80;
-    uint256 po = 40;
-    ( uint256 width, string memory base ) = idToColor(params.tokenId, params.tokenId + 1, params.owner);
 
-    for(uint256 r = 0; r < 10; ++r){
-      pos_x = 40;
-      for(uint256 c = 0; c < 10; ++c){
-        ( uint256 duration, string memory rgb ) = idToColor(params.tokenId, r*c+pos_x*pos_y*pos_y+pos_x+r, params.owner);
-        //( uint256 duration2, string memory rgb2 ) = idToColor(params.tokenId, r*c+duration, params.owner);
-        string memory pattern = string(abi.encodePacked(rgb, ';', base, ';', rgb));
-        svgPaths = string(abi.encodePacked(
-          svgPaths,
-          '<rect width="',
-          (duration+w).toString(),
-          '" height="',
-          (duration+w).toString(),
-          '" x="',
-          pos_x.toString(),
-          '" y="',
-          pos_y.toString(),
-        //  '" style="stroke-width:3;stroke:rgb(0,0,0)">',
+    string memory pathA = _genPath(40, 40, 290, 290, params.tokenId, params.owner);
+    string memory pathB = _genPath(540, 40, 290, 290, params.tokenId, params.owner);
+    string memory pathC = _genPath(290, 290, 580, 290, params.tokenId, params.owner);
 
-          // '<animateTransform attributeName="transform" type="scale" from="0.1" to="7.9" dur="',
-          // (duration + c).toString(),
-          // 's" repeatCount="indefinite" />'
-          '" opacity=".2" rx="',
-          (duration/4).toString(),
-          '"><animate attributeName="fill" values="',
-          pattern,
-          '" dur="',
-          (3+(duration/(c+1))).toString(),
-          's" repeatCount="indefinite" /></rect>'
-        ));
-        pos_x = pos_x + po;
-      }
-      pos_y = pos_y + po;
-    }
+    svgPaths = string(abi.encodePacked(
+      pathA,
+      pathB,
+      pathC
+    ));
+    //
+    // uint256 pos_x = 40;
+    // uint256 pos_y = 40;
+    // uint256 w = 80;
+    // uint256 po = 40;
+    // ( uint256 width, string memory base ) = idToColor(params.tokenId, params.tokenId + 1, params.owner);
+    //
+    // for(uint256 r = 0; r < 10; ++r){
+    //   pos_x = 40;
+    //   for(uint256 c = 0; c < 10; ++c){
+    //     ( uint256 duration, string memory rgb ) = idToColor(params.tokenId, r*c+pos_x*pos_y*pos_y+pos_x+r, params.owner);
+    //     //( uint256 duration2, string memory rgb2 ) = idToColor(params.tokenId, r*c+duration, params.owner);
+    //     string memory pattern = string(abi.encodePacked(rgb, ';', base, ';', rgb));
+    //     svgPaths = string(abi.encodePacked(
+    //       svgPaths,
+    //       '<rect width="',
+    //       (duration+w).toString(),
+    //       '" height="',
+    //       (duration+w).toString(),
+    //       '" x="',
+    //       pos_x.toString(),
+    //       '" y="',
+    //       pos_y.toString(),
+    //     //  '" style="stroke-width:3;stroke:rgb(0,0,0)">',
+    //
+    //       // '<animateTransform attributeName="transform" type="scale" from="0.1" to="7.9" dur="',
+    //       // (duration + c).toString(),
+    //       // 's" repeatCount="indefinite" />'
+    //       '" opacity=".2" rx="',
+    //       (duration/4).toString(),
+    //       '"><animate attributeName="fill" values="',
+    //       pattern,
+    //       '" dur="',
+    //       (3+(duration/(c+1))).toString(),
+    //       's" repeatCount="indefinite" /></rect>'
+    //     ));
+    //     pos_x = pos_x + po;
+    //   }
+    //   pos_y = pos_y + po;
+    // }
 
     return svgPaths;
   }
